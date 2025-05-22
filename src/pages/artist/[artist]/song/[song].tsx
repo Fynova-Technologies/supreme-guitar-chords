@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { ChordDisplay } from "@/components/ChordDisplay";
@@ -11,6 +11,7 @@ function SongPage() {
   const { artist, song } = useParams<{ artist: string; song: string }>();
   const navigate = useNavigate();
   const [songData, setSongData] = useState<{song: Song, artistName: string} | null>(null);
+  const chordsRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if (artist && song) {
@@ -66,6 +67,7 @@ function SongPage() {
           <div className="md:col-span-3 order-2 md:order-1">
             <div className="min-h-[70vh] bg-card/50 rounded-lg shadow-sm">
               <ChordDisplay 
+                ref={chordsRef}
                 chordsText={songDetails.chords} 
                 originalKey={songDetails.key} 
               />
@@ -74,6 +76,7 @@ function SongPage() {
           
           <div className="md:col-span-1 order-1 md:order-2">
             <ChordControls
+              chordsRef={chordsRef}
               artistName={artistName}
               songTitle={songDetails.title}
               chordsText={songDetails.chords}
