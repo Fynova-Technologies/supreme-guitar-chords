@@ -5,7 +5,8 @@ import { Layout } from "@/components/Layout";
 import { ChordDisplay } from "@/components/ChordDisplay";
 import { ChordControls } from "@/components/ChordControls";
 import { Artist, Song } from "@/types";
-import chordsData from "@/data/chords.json";
+// import chordsData from "@/data/chordsData.json";
+import music from "@/data/artists.json"
 
 function SongPage() {
   const { artist, song } = useParams<{ artist: string; song: string }>();
@@ -18,7 +19,7 @@ function SongPage() {
       const decodedArtist = decodeURIComponent(artist);
       const decodedSong = decodeURIComponent(song);
       
-      const foundArtist = (chordsData.artists as Artist[]).find(
+      const foundArtist = (music.artists as unknown as Artist[]).find(
         a => a.name.toLowerCase() === decodedArtist.toLowerCase()
       );
       

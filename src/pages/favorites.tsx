@@ -4,14 +4,15 @@ import { Layout } from "@/components/Layout";
 import { SongCard } from "@/components/SongCard";
 import { Artist } from "@/types";
 import { useChordVerseStore } from "@/lib/store";
-import chordsData from "@/data/chords.json";
+// import chordsData from "@/data/chordsData.json";
+import music from "@/data/artists.json"
 
 function FavoritesPage() {
   const { favorites } = useChordVerseStore();
   const [favoriteSongs, setFavoriteSongs] = useState<{song: any, artistName: string}[]>([]);
   
   useEffect(() => {
-    const artists = chordsData.artists as Artist[];
+    const artists = music.artists as unknown as Artist[];
     const songs = favorites.map(fav => {
       const artist = artists.find(a => a.name === fav.artistName);
       const song = artist?.songs.find(s => s.title === fav.songTitle);

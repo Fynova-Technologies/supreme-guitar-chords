@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useChordVerseStore } from "@/lib/store";
 import { toast } from "sonner";
+import { exportToPDF } from "./ui/exportToPdf";
 
 interface ChordControlsProps {
   artistName: string;
@@ -97,92 +98,12 @@ export function ChordControls({ artistName, songTitle, chordsText, chordsRef }: 
   const printChords = () => {
     window.print();
   };
-
-  const exportToPDF = async () => {
-    if (!chordsRef.current) {
-      toast.error("Unable to generate PDF. Please try again.");
-      return;
-    }
-
+  
+  const handleExportToPDF = async () => {
     setIsGeneratingPDF(true);
-    
-    try {
-      const element = chordsRef.current;
-      
-      // Create a clone of the element for PDF generation
-      const clonedElement = element.cloneNode(true) as HTMLElement;
-      
-      // Style the cloned element for better PDF output
-      clonedElement.style.position = 'absolute';
-      clonedElement.style.left = '-9999px';
-      clonedElement.style.top = '0';
-      clonedElement.style.width = element.offsetWidth + 'px';
-      clonedElement.style.height = 'auto';
-      clonedElement.style.maxHeight = 'none';
-      clonedElement.style.overflow = 'visible';
-      clonedElement.style.backgroundColor = 'white';
-      clonedElement.style.color = 'black';
-      clonedElement.style.padding = '20px';
-      
-      // Add title to the PDF content
-      const titleElement = document.createElement('div');
-      titleElement.innerHTML = `
-        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 8px; color: black;">${songTitle}</h1>
-        <p style="font-size: 18px; margin-bottom: 20px; color: #666;">by ${artistName}</p>
-        ${currentTransposition !== 0 ? `<p style="font-size: 14px; margin-bottom: 15px; color: #888;">Transposed: ${currentTransposition > 0 ? '+' : ''}${currentTransposition}</p>` : ''}
-      `;
-      clonedElement.insertBefore(titleElement, clonedElement.firstChild);
-      
-      // Append to body temporarily
-      document.body.appendChild(clonedElement);
-      
-      // Generate canvas from the cloned element
-      const canvas = await html2canvas(clonedElement, {
-        scale: 2, // Higher quality
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        width: clonedElement.scrollWidth,
-        height: clonedElement.scrollHeight,
-      });
-      
-      // Remove the cloned element
-      document.body.removeChild(clonedElement);
-      
-      // Create PDF
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      
-      // Calculate dimensions to fit the page
-      const ratio = Math.min(pdfWidth / (imgWidth * 0.264583), pdfHeight / (imgHeight * 0.264583));
-      const finalWidth = imgWidth * 0.264583 * ratio;
-      const finalHeight = imgHeight * 0.264583 * ratio;
-      
-      // Center the image on the page
-      const x = (pdfWidth - finalWidth) / 2;
-      const y = (pdfHeight - finalHeight) / 2;
-      
-      pdf.addImage(imgData, "PNG", x, y, finalWidth, finalHeight);
-      
-      // Save the PDF
-      const fileName = `${songTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_chords.pdf`;
-      pdf.save(fileName);
-      
-      toast.success("PDF generated successfully!");
-      
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
-    } finally {
-      setIsGeneratingPDF(false);
-    }
+    await exportToPDF(chordsRef, songTitle, artistName, currentTransposition);
+    setIsGeneratingPDF(false);
   };
-
   
   const toggleAutoscroll = () => {
     setIsAutoscrolling(!isAutoscrolling);
@@ -192,6 +113,7 @@ export function ChordControls({ artistName, songTitle, chordsText, chordsRef }: 
       toast.info("Auto-scroll paused");
     }
   };
+
   
   return (
     <div className="flex flex-col gap-4 p-4 bg-card rounded-lg shadow-sm border">
@@ -238,7 +160,7 @@ export function ChordControls({ artistName, songTitle, chordsText, chordsRef }: 
           <Button 
             variant="outline" 
             size="sm" 
-            onClick={exportToPDF}
+            onClick={handleExportToPDF}
             className="flex-1"
             id="pdf-btn"
           >
@@ -305,15 +227,14 @@ export function ChordControls({ artistName, songTitle, chordsText, chordsRef }: 
         {isAutoscrolling && (
           <div className="pt-2">
             <span className="text-xs text-muted-foreground mb-1 block">
-              {/* Speed */}
               Speed: {autoscrollSpeed.toFixed(1)}x
             </span>
             <Slider 
-              min={1.1} 
-              max={15} 
-              step={1} 
-              value={[autoscrollSpeed * 10]} 
-              onValueChange={(values) => setAutoscrollSpeed(values[0] / 10)}
+              min={0.5} 
+              max={1.5} 
+              step={0.1} 
+              value={[autoscrollSpeed ]} 
+              onValueChange={(values) => setAutoscrollSpeed(values[0])}
             />
           </div>
         )}

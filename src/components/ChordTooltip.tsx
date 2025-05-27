@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { chordDiagrams } from '@/data/chordDiagrams';
-import { ChordChart } from './chordChart';
+import { chordDiagrams } from '@/data/ChordDiagrams';
+import { ChordChart } from './ChordChart';
 
 interface ChordTooltipProps {
   chord: string;

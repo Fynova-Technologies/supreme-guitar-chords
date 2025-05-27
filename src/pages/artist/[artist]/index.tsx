@@ -6,7 +6,8 @@ import { SongCard } from "@/components/SongCard";
 import { Artist, Song } from "@/types";
 import { fuzzySearch } from "@/lib/utils";
 import { useChordVerseStore } from "@/lib/store";
-import chordsData from "@/data/chords.json";
+// import chordsData from "@/data/chordsData.json";
+import music from "@/data/artists.json"
 
 function ArtistPage() {
   const { artist } = useParams<{ artist: string }>();
@@ -17,7 +18,7 @@ function ArtistPage() {
   useEffect(() => {
     if (artist) {
       const decodedArtist = decodeURIComponent(artist);
-      const foundArtist = (chordsData.artists as Artist[]).find(
+      const foundArtist = (music.artists as unknown as Artist[]).find(
         a => a.name.toLowerCase() === decodedArtist.toLowerCase()
       );
       

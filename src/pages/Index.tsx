@@ -5,14 +5,15 @@ import { ArtistCard } from "@/components/ArtistCard";
 import { Artist } from "@/types";
 import { fuzzySearch } from "@/lib/utils";
 import { useChordVerseStore } from "@/lib/store";
-import chordsData from "@/data/chords.json";
+// import chordsData from "@/data/chordsData.json";
+import music from "@/data/artists.json"
 
 function Index() {
   const { searchQuery } = useChordVerseStore();
   const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
   
   useEffect(() => {
-    const artists = chordsData.artists as Artist[];
+    const artists = music.artists as unknown as Artist[];
     
     if (searchQuery && searchQuery.trim() !== '') {
       const results = fuzzySearch(artists, searchQuery, ['name', 'songs.title']);

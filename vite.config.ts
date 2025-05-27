@@ -19,4 +19,17 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000, 
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Customize according to your dependencies
+          react: ['react', 'react-dom'],
+          lucide: ['lucide-react'],
+          vendor: ['jsPDF', 'html2canvas'],
+        },
+      },
+    },
+  },
 }));
