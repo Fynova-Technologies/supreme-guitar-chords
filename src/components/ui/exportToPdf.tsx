@@ -1,4 +1,4 @@
-import { jsPDF } from "jspdf";
+import * as jspdf from "jspdf";
 import html2canvas from "html2canvas";
 import { toast } from "sonner";
 
@@ -63,7 +63,7 @@ export async function exportToPDF(
     document.body.removeChild(clonedElement);
 
     const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
+    const pdf = new jspdf.jsPDF("p", "mm", "a4");
 
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
