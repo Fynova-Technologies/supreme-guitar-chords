@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => ({
           // Customize according to your dependencies
           react: ['react', 'react-dom'],
           lucide: ['lucide-react'],
-          vendor: ['jsPDF', 'html2canvas'],
+          vendor: ['jspdf', 'html2canvas'],
         },
       },
     },
