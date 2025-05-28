@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useChordVerseStore } from "@/lib/store";
 import { toast } from "sonner";
-import { exportToPDF } from "./ui/exportToPdf";
+import { exportToPDF } from "@/components/ui/exportToPdf";
 
 interface ChordControlsProps {
   artistName: string;
