@@ -26,6 +26,10 @@ export default defineConfig(({ mode }) => ({
     outDir: '../dist', 
     chunkSizeWarningLimit: 1000, 
     rollupOptions: {
+      input: {
+        // app: path.resolve(__dirname, 'client/src/main.jsx')
+        app: path.resolve(__dirname, 'client/index.html')
+      },
       output: {
         manualChunks: {
           // Customize according to dependencies
@@ -44,6 +48,6 @@ export default defineConfig(({ mode }) => ({
       'zustand',
       'lucide-react',
     ],
-    entries: ['./client/main.jsx'],
+    entries: ['./client/src/main.jsx'],
   },
 }));
