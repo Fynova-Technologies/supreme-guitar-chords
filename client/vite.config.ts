@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  root: 'client',
+  root: '.',
   server: {
     host: "::",
     port: 8080,
@@ -23,13 +23,10 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    outDir: '../dist', 
+    outDir: 'dist', 
     chunkSizeWarningLimit: 1000, 
     rollupOptions: {
-      input: {
-        // app: path.resolve(__dirname, 'client/src/main.jsx')
-        app: path.resolve(__dirname, 'client/index.html')
-      },
+      // input: 'client/index.html',
       output: {
         manualChunks: {
           // Customize according to dependencies
@@ -48,6 +45,6 @@ export default defineConfig(({ mode }) => ({
       'zustand',
       'lucide-react',
     ],
-    entries: ['./client/src/main.jsx'],
+    entries: ['./src/main.jsx'],
   },
 }));
