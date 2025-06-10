@@ -9,7 +9,7 @@ dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI!;
 const MONGO_DATABASE = process.env.MONGO_DATABASE!;
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
 const app = express();
 const httpServer = http.createServer(app);
