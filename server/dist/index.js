@@ -15,25 +15,14 @@ const io = new SocketIOServer(httpServer, {
 });
 app.use(cors());
 app.use(express.json());
-// app.get('/api/artists', async (_req: Request, res: Response) => {
-//   const db = mongoose.connection.db!;
-//   try {
-//     const artistsDoc = await db.collection('chordie_artists').findOne({});
-//     if (!artistsDoc || !artistsDoc.artists) {
-//       // Remove "return" here
-//       res.status(404).json({ error: 'Artists not found' });
-//       return; // Add explicit return to exit function
-//     }
-//     // Remove "return" here too
-//     res.status(200).json(artistsDoc.artists);
-//   } catch (err) {
-//     console.error('Error fetching artists:', err);
-//     // Remove "return" here
-//     res.status(500).json({ error: 'Fetch failed' });
-//   }
-// });
 app.get('/api/artists', async (_req, res) => {
     const db = mongoose.connection.db;
+    // Check if database connection is available
+    if (!db) {
+        console.error('Database connection not available');
+        res.status(500).json({ error: 'Database connection not available' });
+        return;
+    }
     try {
         const artistsDoc = await db
             .collection('chordie_artists')

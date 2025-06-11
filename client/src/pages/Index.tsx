@@ -7,13 +7,13 @@ import { fuzzySearch } from "@/lib/utils";
 import { useChordVerseStore } from "@/lib/store";
 import { io, Socket } from "socket.io-client";
 // import chordsData from "@/data/chordsData.json";
-import music from "@/data/artists.json"
+// import music from "@/data/artists.json"
 
 function Index() {
   const { searchQuery } = useChordVerseStore();
   const [artists, setArtists] = useState<Artist[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
+  // const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
   const [filtered, setFiltered] = useState<Artist[]>([]);
   
   // useEffect(() => {

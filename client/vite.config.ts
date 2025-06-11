@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     proxy: {
-      '/api': 'http://localhost:3000',
+      '/api': 'http://localhost:8000',
     },
   },
   plugins: [
@@ -26,7 +26,6 @@ export default defineConfig(({ mode }) => ({
     outDir: 'dist', 
     chunkSizeWarningLimit: 1000, 
     rollupOptions: {
-      // input: 'client/index.html',
       output: {
         manualChunks: {
           // Customize according to dependencies
@@ -45,6 +44,6 @@ export default defineConfig(({ mode }) => ({
       'zustand',
       'lucide-react',
     ],
-    entries: ['./src/main.jsx'],
+    // entries: ['./src/main.jsx'],
   },
 }));
