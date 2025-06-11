@@ -42,7 +42,7 @@ function ArtistPage() {
     const decodedArtist = decodeURIComponent(artist);
 
     try {
-      const res = await fetch("/api/artists");
+      const res = await fetch("https://guitar-backend-xf0q.onrender.com/api/artists");
       const artists = await res.json();
 
       const foundArtist = (artists as Artist[]).find(

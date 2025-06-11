@@ -29,7 +29,7 @@ function Index() {
 
   const fetchArtists = useCallback(async () => {
     try {
-      const res = await fetch('/api/artists');
+      const res = await fetch('https://guitar-backend-xf0q.onrender.com/api/artists');
       if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
       const data: Artist[] = await res.json();
       console.log("fetched artists:", data);

@@ -13,7 +13,8 @@ import FavoritesPage from "./pages/favorites";
 import io from 'socket.io-client';
 import { useEffect } from "react";
 
-const socket = io('http://localhost:8000');
+// const socket = io('http://localhost:8000');
+const socket = io('https://guitar-backend-xf0q.onrender.com');
 const queryClient = new QueryClient();
 
 const App = () => {

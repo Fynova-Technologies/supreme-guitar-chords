@@ -59,7 +59,7 @@ function FavoritesPage() {
 useEffect(() => {
   async function fetchFavorites() {
     try {
-      const res = await fetch("/api/artists");
+      const res = await fetch("https://guitar-backend-xf0q.onrender.com/api/artists");
       const payload = await res.json();
       
       // payload might be either Artist[] or { artists: Artist[] }
