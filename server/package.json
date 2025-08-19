@@ -8,6 +8,7 @@
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",
     "node": "^22.16.0",
+    "nodemailer": "^7.0.5",
     "socket.io": "^4.8.1"
   },
   "name": "sever",
@@ -23,9 +24,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/cors": "^2.8.18",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.29",
+    "@types/nodemailer": "^7.0.0",
     "@types/socket.io": "^3.0.1",
     "dotenv": "^16.5.0",
     "eslint": "^9.28.0",

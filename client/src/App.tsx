@@ -9,11 +9,14 @@ import NotFound from "./pages/NotFound";
 import ArtistPage from "./pages/artist/[artist]/index";
 import SongPage from "./pages/artist/[artist]/song/[song]";
 import FavoritesPage from "./pages/favorites";
-// import { io } from 'socket.io-client'
 import io from 'socket.io-client';
 import { useEffect } from "react";
+import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
+import { TermsOfServicePage } from "@/pages/TermsOfServicePage";
+import { AboutUsPage } from "@/pages/AboutUsPage";
+import { ContactUsPage } from "./pages/ContactUsPage";
 
-// const socket = io('http://localhost:8000');
+
 const socket = io('https://guitar-backend-xf0q.onrender.com');
 const queryClient = new QueryClient();
 
@@ -42,6 +45,11 @@ const App = () => {
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/artist/:artist" element={<ArtistPage />} />
           <Route path="/artist/:artist/song/:song" element={<SongPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/about-us" element={<AboutUsPage />} />
+          <Route path="/contact-us" element={<ContactUsPage />} />
+          {/* Catch-all route for 404 Not Found */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

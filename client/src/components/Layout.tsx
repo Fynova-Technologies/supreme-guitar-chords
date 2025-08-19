@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SearchBar } from "@/components/SearchBar";
+import { routes } from "@/types";
+import { LoginButton } from "./Auth/LoginButton";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
+  const legalItems = routes;
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,6 +34,7 @@ export function Layout({ children }: LayoutProps) {
               Favorites
             </Link>
             <ThemeToggle />
+            <LoginButton />
           </div>
         </div>
         
@@ -44,7 +49,18 @@ export function Layout({ children }: LayoutProps) {
       
       <footer className="border-t py-4">
         <div className="container mx-auto text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} ChordVerse. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} ChordVerse. All rights reserved.
+            {legalItems.map((items) => (
+              <Link
+                key={items.path}
+                to={items.path}
+                className="ml-2 text-primary hover:underline"
+              >
+                {items.title}
+              </Link>
+            ))}
+          </p>
         </div>
       </footer>
     </div>

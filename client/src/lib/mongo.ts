@@ -10,7 +10,7 @@ export async function getDb() {
   if (cachedDb) return cachedDb;
 
   await client.connect();
-  const db = client.db("music-db"); // your DB name
+  const db = client.db("music-db"); 
   cachedDb = db;
   return db;
 }

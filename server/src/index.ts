@@ -4,6 +4,7 @@ import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import contactRoutes from './routes/route.js'
 
 dotenv.config();
 
@@ -57,6 +58,8 @@ app.get('/api/artists', async (_req: Request, res: Response): Promise<void> => {
   }
 );
 
+app.use(contactRoutes);
+
 async function startServer() {
   try {
     await mongoose.connect(MONGO_URI, {
@@ -89,47 +92,3 @@ async function startServer() {
 }
 
 startServer();
-
-
-
-
-// import { connectToDatabase } from './db';
-// import artistRoutes from './routes/artistRoutes';
-// import { setupSocketIO } from './socket';
-// import dotenv from 'dotenv';
-// import express from 'express';
-// import http from 'http';
-// import { Server as SocketIOServer} from 'socket.io';
-// import cors from 'cors';
-
-// dotenv.config();
-
-// const app = express();
-// const httpServer = http.createServer(app);
-// const io = new SocketIOServer(httpServer, {
-//   cors: { origin: '*', methods: ['GET', 'POST'] },
-// });
-
-// app.use(cors());
-// app.use(express.json());
-// app.use('/api', artistRoutes);
-
-// async function startServer() {
-//   const MONGO_URI = process.env.MONGO_URI!;
-//   const MONGO_DATABASE = process.env.MONGO_DATABASE!;
-//   const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-
-//   try {
-//     const db = await connectToDatabase(MONGO_URI, MONGO_DATABASE);
-//     setupSocketIO(io, db);
-
-//     httpServer.listen(PORT, () => {
-//       console.log(`Server listening at http://localhost:${PORT}`);
-//     });
-//   } catch (err) {
-//     console.error('Startup failed:', err);
-//     process.exit(1);
-//   }
-// }
-
-// startServer();
