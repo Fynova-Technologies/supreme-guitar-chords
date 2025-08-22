@@ -4,57 +4,10 @@ import { Layout } from "@/components/Layout";
 import { SongCard } from "@/components/SongCard";
 import { Artist } from "@/types";
 import { useChordVerseStore } from "@/lib/store";
-// import chordsData from "@/data/chordsData.json";
-// import music from "@/data/artists.json"
-import { useParams } from "react-router-dom";
 
 function FavoritesPage() {
   const { favorites } = useChordVerseStore();
   const [favoriteSongs, setFavoriteSongs] = useState<{song: any, artistName: string}[]>([]);
-  
-  // useEffect(() => {
-  //   const artists = music.artists as unknown as Artist[];
-  //   const songs = favorites.map(fav => {
-  //     const artist = artists.find(a => a.name === fav.artistName);
-  //     const song = artist?.songs.find(s => s.title === fav.songTitle);
-      
-  //     if (artist && song) {
-  //       return { song, artistName: artist.name };
-  //     }
-  //     return null;
-  //   }).filter(Boolean) as {song: any, artistName: string}[];
-    
-  //   setFavoriteSongs(songs);
-  // }, [favorites]);
-
-//   useEffect (() => { async function fetchFavorites() {
-
-//     try{
-//       const res = await fetch("/api/artists")
-//       console.log('data:', res);
-//       const data = await res.json();
-//       const artists = (data.artists as Artist[]);
-
-//       // map favorites to full song data
-//         const songs = favorites
-//         .map(fav => {
-//             console.log("favorite data from chordverser:", favorites)
-//             const artist = artists.find(a => a.name.toLowerCase() === fav.artistName.toLowerCase());
-//             const song = artist?.songs.find(s => s.title === fav.songTitle);
-//             return artist && song
-//               ? { song, artistName: artist.name }
-//               : null;
-//           })
-//           .filter((x): x is { song: any; artistName: string } => x !== null);
-
-//       setFavoriteSongs(songs);
-
-//     }catch (err) {
-//       console.log('Error fetching favourites: ', err);
-//     }
-//   }
-//   fetchFavorites();
-// }, [favorites]);
 
 useEffect(() => {
   async function fetchFavorites() {

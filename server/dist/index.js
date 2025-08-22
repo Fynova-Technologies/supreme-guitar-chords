@@ -4,7 +4,7 @@ import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import contactRoutes from './routes/route.js';
+import routes from './routes/index.js';
 dotenv.config();
 const MONGO_URI = process.env.MONGO_URI;
 const MONGO_DATABASE = process.env.MONGO_DATABASE;
@@ -39,7 +39,7 @@ app.get('/api/artists', async (_req, res) => {
         res.status(500).json({ error: 'Fetch failed' });
     }
 });
-app.use(contactRoutes);
+app.use("/api", routes);
 async function startServer() {
     try {
         await mongoose.connect(MONGO_URI, {

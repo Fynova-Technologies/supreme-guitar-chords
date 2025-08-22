@@ -1,2 +1,0 @@
-// Displays user profile
-

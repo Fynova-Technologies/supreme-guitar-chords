@@ -25,7 +25,7 @@ export function LoginButton () {
                         className="flex items-center"
                         onClick={() => loginWithRedirect()}
                     >
-                        <i className="fas fa-sing-in-alt mr-3"></i>
+                        <i className="fas fa-sign-in-alt mr-3"></i>
                         <span>Log in</span>
                     </button>
                 )

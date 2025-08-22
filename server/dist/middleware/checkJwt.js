@@ -1,17 +1,17 @@
-"use strict";
-// const express = require('express');
-// const app = express();
-// const { auth } = require('express-oauth2-jwt-bearer');
-// const port = process.env.PORT || 8080;
-// const jwtCheck = auth({
-//   audience: 'https://supreme-guitar-chords/api',
-//   issuerBaseURL: 'https://dev-l0cnkmnrn4reomjc.us.auth0.com/',
-//   tokenSigningAlg: 'RS256'
-// });
-// // enforce on all endpoints
-// app.use(jwtCheck);
-// app.get('/authorized', function (req, res) {
-//     res.send('Secured Resource');
-// });
-// app.listen(port);
-// console.log('Running on port ', port);
+import { expressjwt } from "express-jwt";
+import jwksRsa from "jwks-rsa";
+import dotenv from "dotenv";
+dotenv.config();
+export const checkJwt = expressjwt({
+    // Dynamically provide a signing key based on the kid in the header
+    requestProperty: "auth",
+    secret: jwksRsa.expressJwtSecret({
+        cache: true, rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://dev-l0cnkmnrn4reomjc.us.auth0.com/.well-known/jwks.json`
+    }),
+    // Validate the audience and the issuer
+    audience: process.env.AUTH0_AUDIENCE,
+    issuer: `https://dev-l0cnkmnrn4reomjc.us.auth0.com/`,
+    algorithms: ["RS256"]
+});

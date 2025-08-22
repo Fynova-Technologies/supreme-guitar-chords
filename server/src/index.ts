@@ -4,7 +4,7 @@ import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import contactRoutes from './routes/route.js'
+import routes from './routes/index.js'
 
 dotenv.config();
 
@@ -58,7 +58,7 @@ app.get('/api/artists', async (_req: Request, res: Response): Promise<void> => {
   }
 );
 
-app.use(contactRoutes);
+app.use("/api", routes);
 
 async function startServer() {
   try {
