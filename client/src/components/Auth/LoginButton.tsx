@@ -23,7 +23,9 @@ export function LoginButton () {
                 ) : (
                     <button
                         className="flex items-center"
-                        onClick={() => loginWithRedirect()}
+                        onClick={() => loginWithRedirect({
+                            authorizationParams: { prompt: 'login' },
+                        })}
                     >
                         <i className="fas fa-sign-in-alt mr-3"></i>
                         <span>Log in</span>

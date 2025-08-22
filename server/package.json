@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.2",
+    "@types/express-session": "^1.18.2",
     "@types/node": "^22.15.29",
     "@types/nodemailer": "^7.0.0",
     "@types/socket.io": "^3.0.1",
