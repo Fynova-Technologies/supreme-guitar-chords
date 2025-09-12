@@ -1,8 +1,9 @@
 import { ObjectId } from "mongodb";
 import { ArtistsCollection } from "../db/collections.js";
 export async function getAllArtists() {
-    // return all artist documents
-    return ArtistsCollection.find({}).toArray();
+    const artists = await ArtistsCollection.find({}).toArray();
+    // make sure every artist has songs array
+    return artists.map(a => ({ ...a, songs: a.songs || [] }));
 }
 export async function getArtistById(id) {
     return ArtistsCollection.findOne({ _id: new ObjectId(id) });

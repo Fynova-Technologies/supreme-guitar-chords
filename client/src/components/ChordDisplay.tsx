@@ -1,96 +1,3 @@
-// import { useEffect, useRef, useState, forwardRef } from "react";
-// import { useChordVerseStore } from "@/lib/store";
-// import { parseAndTransposeChords, formatChordsText } from "@/lib/utils";
-// import { ScrollArea } from "@/components/ui/scroll-area";
-
-// interface ChordDisplayProps {
-//   chordsText: string;
-//   originalKey: string;
-// }
-
-// export const ChordDisplay = forwardRef<HTMLDivElement, ChordDisplayProps>(
-//   ({ chordsText, originalKey }, ref) => {
-//     const { currentTransposition, isAutoscrolling, autoscrollSpeed } = useChordVerseStore();
-//     const containerRef = useRef<HTMLDivElement>(null);
-//     const animationFrameRef = useRef<number>();
-//     const [transposedText, setTransposedText] = useState(chordsText);
-    
-//     // Handle transposition
-//     useEffect(() => {
-//       setTransposedText(parseAndTransposeChords(chordsText, currentTransposition));
-//     }, [chordsText, currentTransposition]);
-    
-//     // Handle autoscroll with improved implementation
-//     useEffect(() => {
-//       // Clean up any existing animation frame
-//       if (animationFrameRef.current) {
-//         cancelAnimationFrame(animationFrameRef.current);
-//         animationFrameRef.current = undefined;
-//       }
-      
-//       if (!isAutoscrolling || !containerRef.current) {
-//         return;
-//       }
-      
-//       const container = containerRef.current;
-      
-//       const scroll = () => {
-//         if (container && isAutoscrolling) {
-//           // Check if we've reached the bottom
-//           if (container.scrollTop + container.clientHeight >= container.scrollHeight - 5) {
-//             // Reset to top
-//             container.scrollTop = 0;
-//           } else {
-//             container.scrollTop += autoscrollSpeed * 0.5;
-//           }
-          
-//           // Continue animation only if still autoscrolling
-//           if (isAutoscrolling) {
-//             animationFrameRef.current = requestAnimationFrame(scroll);
-//           }
-//         }
-//       };
-      
-//       // Start the animation
-//       animationFrameRef.current = requestAnimationFrame(scroll);
-      
-//       // Cleanup function
-//       return () => {
-//         if (animationFrameRef.current) {
-//           cancelAnimationFrame(animationFrameRef.current);
-//           animationFrameRef.current = undefined;
-//         }
-//       };
-//     }, [isAutoscrolling, autoscrollSpeed]);
-    
-//     return (
-//       <div 
-//         ref={(node) => {
-//           containerRef.current = node;
-//           if (typeof ref === 'function') {
-//             ref(node);
-//           } else if (ref) {
-//             ref.current = node;
-//           }
-//         }}
-//         id="chords-section"
-//         className="relative h-full w-full max-w-full overflow-y-auto rounded-lg bg-card p-6"
-//         style={{ maxHeight: "70vh" }}
-//       >
-//         <div
-//           className="font-mono text-base leading-relaxed"
-//           dangerouslySetInnerHTML={{ 
-//             __html: formatChordsText(transposedText)
-//           }}
-//         />
-//       </div>
-//     );
-//   }
-// );
-
-// ChordDisplay.displayName = "ChordDisplay";
-
-
 import { useEffect, useRef, useState, forwardRef } from "react";
 import { useChordVerseStore } from "@/lib/store";
 import { parseAndTransposeChords } from "@/lib/utils";
@@ -106,21 +13,14 @@ export const ChordDisplay = forwardRef<HTMLDivElement, ChordDisplayProps>(
     const { currentTransposition, isAutoscrolling, autoscrollSpeed } = useChordVerseStore();
     const containerRef = useRef<HTMLDivElement>(null);
     const animationFrameRef = useRef<number>();
-    const [transposedText, setTransposedText] = useState(chordsText);
-    const [processedContent, setProcessedContent] = useState<React.ReactNode[]>([]);
-    
-    // Handle transposition
-    useEffect(() => {
-      setTransposedText(parseAndTransposeChords(chordsText, currentTransposition));
-    }, [chordsText, currentTransposition]);
+    const [simpleContent, setSimpleContent] = useState<React.ReactNode[]>([]);
     
     // Process text to add interactive chord tooltips
     useEffect(() => {
-      const processText = (text: string) => {
-        const lines = text.split('\n');
-        const elements: React.ReactNode[] = [];
+      if (chordsText) {
+        const lines = chordsText.split('\n');
         
-        lines.forEach((line, lineIndex) => {
+        const processedLines = lines.map((line, lineIndex) => {
           // Enhanced chord regex to match your JSON format
           const chordRegex = /\b([A-G][#b]?(?:maj|min|m|M|sus|add|dim|aug|°|ø)?[0-9]*(?:\/[A-G][#b]?)?)\b/g;
           let lastIndex = 0;
@@ -130,18 +30,16 @@ export const ChordDisplay = forwardRef<HTMLDivElement, ChordDisplayProps>(
           // Check if this line contains section markers like [Verse 1], [Chorus], etc.
           const sectionMatch = line.match(/^\[(.*?)\]$/);
           if (sectionMatch) {
-            elements.push(
+            return (
               <div key={lineIndex} className="font-bold text-lg text-blue-700 mt-4 mb-2">
                 {line}
               </div>
             );
-            return;
           }
           
           // Check if line is empty
           if (line.trim() === '') {
-            elements.push(<div key={lineIndex} className="h-4"></div>);
-            return;
+            return <div key={lineIndex} className="h-4"></div>;
           }
           
           // Process chords in the line
@@ -176,18 +74,18 @@ export const ChordDisplay = forwardRef<HTMLDivElement, ChordDisplayProps>(
             );
           }
           
-          elements.push(
+          return (
             <div key={lineIndex} className="whitespace-pre leading-relaxed">
               {lineElements.length > 0 ? lineElements : line}
             </div>
           );
         });
         
-        return elements;
-      };
-      
-      setProcessedContent(processText(transposedText));
-    }, [transposedText]);
+        setSimpleContent(processedLines);
+      } else {
+        setSimpleContent([]);
+      }
+    }, [chordsText]);
     
     // Handle autoscroll
     useEffect(() => {
@@ -241,7 +139,15 @@ export const ChordDisplay = forwardRef<HTMLDivElement, ChordDisplayProps>(
         style={{ maxHeight: "70vh" }}
       >
         <div className="font-mono text-base leading-relaxed">
-          {processedContent}
+          {simpleContent.length > 0 ? simpleContent : (
+            <div className="text-muted-foreground">
+              Debug: No content to display
+              <br />
+              chordsText length: {chordsText?.length || 0}
+              <br />
+              chordsText preview: {chordsText ? chordsText.substring(0, 50) + "..." : "undefined"}
+            </div>
+          )}
         </div>
       </div>
     );

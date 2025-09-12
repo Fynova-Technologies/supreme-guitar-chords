@@ -3,8 +3,9 @@ import { ArtistsCollection } from "../db/collections.js";
 import { ArtistDoc, SongSubdoc } from "../models/artist.js";
 
 export async function getAllArtists(): Promise<ArtistDoc[]> {
-  // return all artist documents
-  return ArtistsCollection.find({}).toArray();
+    const artists = await ArtistsCollection.find({}).toArray();
+  // make sure every artist has songs array
+  return artists.map(a => ({ ...a, songs: a.songs || [] }));
 }
 
 export async function getArtistById(id: string): Promise<ArtistDoc | null> {

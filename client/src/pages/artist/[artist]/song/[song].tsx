@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
@@ -12,48 +11,72 @@ function SongPage() {
   const [songData, setSongData] = useState<{song: Song, artistName: string} | null>(null);
   const chordsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {async function fetchLyrics() {
-    if(!artist && !song) return;
+  useEffect(() => {
+    async function fetchLyrics() {
+      if(!artist || !song) return;
 
-    const decodedArtist = decodeURIComponent(artist);
-    const decodedSong = decodeURIComponent(song);
+      const decodedArtist = decodeURIComponent(artist);
+      const decodedSong = decodeURIComponent(song);
 
-    try{
-      const res = await fetch('https://guitar-backend-xf0q.onrender.com/api/artists');
-      const artists = await res.json();
+      try{
+        const res = await fetch('http://localhost:8080/api/artists');
+        const songsData = await res.json();
 
-      const foundArtist = (artists as Artist[]).find(
-        a => a.name.toLowerCase() === decodedArtist.toLowerCase()
-      );
+        // Group songs by artist name (same logic as other components)
+        const artistsMap = new Map();
+        let artistCounter = 0;
+        
+        songsData.forEach((songItem: any) => {
+          const artistName = songItem.artist;
+          // Skip if artistName is undefined/null
+          if (!artistName) {
+            return;
+          }
+          
+          if (!artistsMap.has(artistName)) {
+            artistsMap.set(artistName, {
+              _id: `artist-${artistCounter++}`,
+              name: artistName,
+              songs: []
+            });
+          }
+          artistsMap.get(artistName).songs.push(songItem);
+        });
 
-      if(foundArtist) {
-        const foundSong = foundArtist.songs.find(
-          s => s.title.toLowerCase() === decodedSong.toLowerCase()
+        const groupedArtists = Array.from(artistsMap.values());
+
+        // Find the artist
+        const foundArtist = groupedArtists.find(
+          a => a.name.toLowerCase() === decodedArtist.toLowerCase()
         );
-        console.log('foundartist:', foundSong)
 
-        if (foundSong) {
-          setSongData({
-            song: foundSong,
-            artistName: foundArtist.name,
-          });
-          // set document title for better UX
-          document.title = `${foundSong.title} by ${foundArtist.name} | chordVerse`;
-        }else {
-          navigate(`/artist/${encodeURIComponent(decodedArtist)}`)
-          console.log('song not found');
+        if(foundArtist) {
+          const foundSong = foundArtist.songs.find(
+            s => s.title.toLowerCase() === decodedSong.toLowerCase()
+          );
+
+          if (foundSong) {
+            setSongData({
+              song: foundSong,
+              artistName: foundArtist.name,
+            });
+            // set document title for better UX
+            document.title = `${foundSong.title} by ${foundArtist.name} | chordVerse`;
+          }else {
+            navigate(`/artist/${encodeURIComponent(decodedArtist)}`)
+            console.log('song not found');
+          }
+        }else{
+          navigate('/');
+          console.log('artist not found');
         }
-      }else{
-        navigate('/');
-        console.log('songs not found');
+      }catch (err) {
+        console.log('Error fetching lyrics with chords:', err);
       }
-    }catch (err) {
-      console.log('Error fetching lyrics with chords:', err);
     }
-  }
-  fetchLyrics();
-},[artist, song, navigate]);
-  
+    fetchLyrics();
+  },[artist, song, navigate]);
+
   if (!songData) {
     return (
       <Layout>
@@ -63,9 +86,9 @@ function SongPage() {
       </Layout>
     );
   }
-  
+
   const { song: songDetails, artistName } = songData;
-  
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -73,24 +96,24 @@ function SongPage() {
           <h1 className="text-3xl font-bold">{songDetails.title}</h1>
           <p className="text-lg text-muted-foreground">by {artistName}</p>
         </div>
-        
+                
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-3 order-2 md:order-1">
             <div className="min-h-[70vh] bg-card/50 rounded-lg shadow-sm">
-              <ChordDisplay 
-                ref={chordsRef}
-                chordsText={songDetails.chords} 
-                originalKey={songDetails.key} 
-              />
+              <ChordDisplay
+                 ref={chordsRef}
+                chordsText={songDetails.lyrics_chords}
+                 originalKey={songDetails.key}
+               />
             </div>
           </div>
-          
+                     
           <div className="md:col-span-1 order-1 md:order-2">
             <ChordControls
               chordsRef={chordsRef}
               artistName={artistName}
               songTitle={songDetails.title}
-              chordsText={songDetails.chords}
+              chordsText={songDetails.lyrics_chords}
             />
           </div>
         </div>

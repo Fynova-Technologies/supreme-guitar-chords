@@ -4,7 +4,7 @@ export type UserDoc = {
   _id?: ObjectId | string;
   auth0Id?: string; // sub
   email?: string;
-  name?: string;
+  username?: string;
   roles?: string[];
   createdAt?: Date;
   // other fields

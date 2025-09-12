@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -7,6 +7,7 @@ import { legalRoutes } from "@/config/legal.config";
 import { LoginButton } from "./Auth/LoginButton";
 import AuthPopup from "./Auth/AuthPopup";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useRegisterUser } from "@/hooks/registerUser";
 
 interface LayoutProps {
   children: ReactNode;
@@ -17,6 +18,11 @@ export function Layout({ children }: LayoutProps) {
   const { isAuthenticated } = useAuth0();
   const [showAuthPopup, setShowAuthPopup] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { registerUser } = useRegisterUser();
+
+    useEffect(() => {
+    if (isAuthenticated) registerUser();
+  }, [isAuthenticated]);
 
   const handleFavoritesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!isAuthenticated) {

@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { checkEmailVerified } from "../controllers/auth.controller.js";
-import { resendVerification } from "../controllers/auth.controller.js";
+import { checkEmailVerified, resendVerification } from "../controllers/auth.controller.js";
 import { checkJwt } from "../middleware/checkJwt.js";
 
 const router = Router();

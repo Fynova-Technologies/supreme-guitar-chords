@@ -7,8 +7,13 @@ dotenv.config();
 
 export async function upsertUser(req: Request, res: Response): Promise<void> {
   try {
-    const { sub, email, name } = req.body; // from Auth0 token
-    const user = await createUser({ auth0Id: sub, email, name });
+    const { auth0Id, email, username } = req.body;
+    if (!auth0Id || !email || !username) {
+      res.status(400).json({ error: "Missing fields" });
+      return;
+    }
+
+    const user = await createUser({ auth0Id, email, username });
     res.json(user);
   } catch (err) {
     console.error(err);

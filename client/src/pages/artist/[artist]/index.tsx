@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Layout } from "@/components/Layout";
@@ -13,37 +12,56 @@ function ArtistPage() {
   const [artistData, setArtistData] = useState<Artist | null>(null);
   const [filteredSongs, setFilteredSongs] = useState<Song[]>([]);
 
-  useEffect(() => { async function fetchFavArtist() {
-    if (!artist) return;
+  useEffect(() => { 
+    async function fetchFavArtist() {
+      if (!artist) return;
 
-    const decodedArtist = decodeURIComponent(artist);
+      const decodedArtist = decodeURIComponent(artist);
 
-    try {
-      const res = await fetch("https://guitar-backend-xf0q.onrender.com/api/artists");
-      const artists = await res.json();
+      try {
+        const res = await fetch("http://localhost:8080/api/artists");
+        const songsData = await res.json();
 
-      const foundArtist = (artists as Artist[]).find(
-        a => a.name.toLowerCase() === decodedArtist.toLowerCase()
-      );
+        // Group songs by artist name (same logic as in Index component)
+        const artistsMap = new Map();
+        
+        songsData.forEach((song: any) => {
+          const artistName = song.artist;
+          if (!artistsMap.has(artistName)) {
+            artistsMap.set(artistName, {
+              _id: artistName,
+              name: artistName,
+              songs: []
+            });
+          }
+          artistsMap.get(artistName).songs.push(song);
+        });
 
-      if (foundArtist) {
-        setArtistData(foundArtist);
-        setFilteredSongs(
-          searchQuery?.trim()
-            ? fuzzySearch(foundArtist.songs, searchQuery, ['title'])
-            : foundArtist.songs
+        const groupedArtists = Array.from(artistsMap.values());
+
+        // Find the specific artist
+        const foundArtist = groupedArtists.find(
+          a => a.name.toLowerCase() === decodedArtist.toLowerCase()
         );
-      } else {
-        setArtistData(null);
-        setFilteredSongs([]);
-      }
-    } catch (error) {
-      console.error("Failed to fetch artists", error);
-    }
-  }
 
-  fetchFavArtist();
-}, [artist, searchQuery]);
+        if (foundArtist) {
+          setArtistData(foundArtist);
+          setFilteredSongs(
+            searchQuery?.trim()
+              ? fuzzySearch(foundArtist.songs, searchQuery, ['title'])
+              : foundArtist.songs
+          );
+        } else {
+          setArtistData(null);
+          setFilteredSongs([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch artists", error);
+      }
+    }
+
+    fetchFavArtist();
+  }, [artist, searchQuery]);
   
   if (!artistData) {
     return (
@@ -70,7 +88,7 @@ function ArtistPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {filteredSongs.map((song) => (
               <SongCard 
-                key={song.title} 
+                key={song._id || song.title} 
                 song={song} 
                 artistName={artistData.name} 
               />

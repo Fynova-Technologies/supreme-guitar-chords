@@ -1,13 +1,15 @@
 import { UsersCollection } from "../db/collections.js";
 export async function createUser(user) {
+    if (!user.auth0Id)
+        throw new Error("auth0Id is required");
     const existing = await UsersCollection.findOne({ auth0Id: user.auth0Id });
     if (existing)
         return existing;
-    const result = await UsersCollection.insertOne({
-        ...user,
-        createdAt: new Date(),
-    });
-    return result;
+    const createdAt = new Date();
+    const result = await UsersCollection.insertOne({ ...user, createdAt });
+    if (!result.acknowledged)
+        throw new Error("Insert failed");
+    return { _id: result.insertedId, ...user, createdAt };
 }
 export async function getAllUsers() {
     return UsersCollection.find({}).toArray();
