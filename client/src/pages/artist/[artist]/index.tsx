@@ -6,35 +6,12 @@ import { SongCard } from "@/components/SongCard";
 import { Artist, Song } from "@/types";
 import { fuzzySearch } from "@/lib/utils";
 import { useChordVerseStore } from "@/lib/store";
-// import chordsData from "@/data/chordsData.json";
-// import music from "@/data/artists.json"
-// import { useCallback } from "node_modules/react-resizable-panels/dist/declarations/src/vendor/react";
 
 function ArtistPage() {
   const { artist } = useParams<{ artist: string }>();
   const { searchQuery } = useChordVerseStore();
   const [artistData, setArtistData] = useState<Artist | null>(null);
   const [filteredSongs, setFilteredSongs] = useState<Song[]>([]);
-  
-  // useEffect(() => {
-  //   if (artist) {
-  //     const decodedArtist = decodeURIComponent(artist);
-  //     const foundArtist = (music.artists as unknown as Artist[]).find(
-  //       a => a.name.toLowerCase() === decodedArtist.toLowerCase()
-  //     );
-      
-  //     if (foundArtist) {
-  //       setArtistData(foundArtist);
-        
-  //       if (searchQuery && searchQuery.trim() !== '') {
-  //         const results = fuzzySearch(foundArtist.songs, searchQuery, ['title']);
-  //         setFilteredSongs(results);
-  //       } else {
-  //         setFilteredSongs(foundArtist.songs);
-  //       }
-  //     }
-  //   }
-  // }, [artist, searchQuery]);
 
   useEffect(() => { async function fetchFavArtist() {
     if (!artist) return;

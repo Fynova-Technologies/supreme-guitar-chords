@@ -1,8 +1,20 @@
 import { Request, Response } from "express";
 import { getManagementToken } from "../utils/auth.js";
+import { createUser } from "../services/user.service.js";
 import dotenv from "dotenv";
 
 dotenv.config();
+
+export async function upsertUser(req: Request, res: Response): Promise<void> {
+  try {
+    const { sub, email, name } = req.body; // from Auth0 token
+    const user = await createUser({ auth0Id: sub, email, name });
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create user" });
+  }
+}
 
 export async function checkEmailVerified(
   req: Request,

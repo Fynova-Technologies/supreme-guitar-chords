@@ -1,5 +1,3 @@
-// import { Server as SocketIOServer } from 'socket.io';
-// import { Db } from 'mongodb';
 import { ArtistsCollection, UsersCollection } from "./db/collections.js";
 export function setupSockets(io) {
     // Watch artists collection

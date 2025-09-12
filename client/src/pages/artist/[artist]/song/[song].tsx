@@ -5,44 +5,12 @@ import { Layout } from "@/components/Layout";
 import { ChordDisplay } from "@/components/ChordDisplay";
 import { ChordControls } from "@/components/ChordControls";
 import { Artist, Song } from "@/types";
-// import chordsData from "@/data/chordsData.json";
-// import music from "@/data/artists.json"
 
 function SongPage() {
   const { artist, song } = useParams<{ artist: string; song: string }>();
   const navigate = useNavigate();
   const [songData, setSongData] = useState<{song: Song, artistName: string} | null>(null);
   const chordsRef = useRef<HTMLDivElement>(null);
-  
-  // useEffect(() => {
-  //   if (artist && song) {
-  //     const decodedArtist = decodeURIComponent(artist);
-  //     const decodedSong = decodeURIComponent(song);
-      
-  //     const foundArtist = (music.artists as unknown as Artist[]).find(
-  //       a => a.name.toLowerCase() === decodedArtist.toLowerCase()
-  //     );
-      
-  //     if (foundArtist) {
-  //       const foundSong = foundArtist.songs.find(
-  //         s => s.title.toLowerCase() === decodedSong.toLowerCase()
-  //       );
-        
-  //       if (foundSong) {
-  //         setSongData({
-  //           song: foundSong,
-  //           artistName: foundArtist.name
-  //         });
-  //         // Set document title for better UX
-  //         document.title = `${foundSong.title} by ${foundArtist.name} | ChordVerse`;
-  //       } else {
-  //         navigate(`/artist/${encodeURIComponent(decodedArtist)}`);
-  //       }
-  //     } else {
-  //       navigate('/');
-  //     }
-  //   }
-  // }, [artist, song, navigate]);
 
   useEffect(() => {async function fetchLyrics() {
     if(!artist && !song) return;

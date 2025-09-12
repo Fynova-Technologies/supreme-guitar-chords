@@ -1,4 +1,14 @@
 import { UsersCollection } from "../db/collections.js";
+export async function createUser(user) {
+    const existing = await UsersCollection.findOne({ auth0Id: user.auth0Id });
+    if (existing)
+        return existing;
+    const result = await UsersCollection.insertOne({
+        ...user,
+        createdAt: new Date(),
+    });
+    return result;
+}
 export async function getAllUsers() {
     return UsersCollection.find({}).toArray();
 }

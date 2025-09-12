@@ -6,26 +6,13 @@ import { Artist } from "@/types";
 import { fuzzySearch } from "@/lib/utils";
 import { useChordVerseStore } from "@/lib/store";
 import { io, Socket } from "socket.io-client";
-// import chordsData from "@/data/chordsData.json";
-// import music from "@/data/artists.json"
 
 function Index() {
   const { searchQuery } = useChordVerseStore();
   const [artists, setArtists] = useState<Artist[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
-  // const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
   const [filtered, setFiltered] = useState<Artist[]>([]);
   
-  // useEffect(() => {
-  //   const artists = music.artists as unknown as Artist[];
-    
-  //   if (searchQuery && searchQuery.trim() !== '') {
-  //     const results = fuzzySearch(artists, searchQuery, ['name', 'songs.title']);
-  //     setFilteredArtists(results);
-  //   } else {
-  //     setFilteredArtists(artists);
-  //   }
-  // }, [searchQuery]);
 
   const fetchArtists = useCallback(async () => {
     try {
