@@ -46,6 +46,7 @@ export const ContactUs: React.FC<ContactUsProps> = ({ onRequireLogic }) => {
 
       if (res.ok) {
         const data = await res.json();
+        setSubmitted(true);
         console.log("Message sent successfully");
       } else {
         console.error("Failed to send message");
@@ -55,7 +56,6 @@ export const ContactUs: React.FC<ContactUsProps> = ({ onRequireLogic }) => {
     } finally {
       setIsSubmitting(false);
     }
-    setSubmitted(true);
   };
 
   const handleBack = () => {
