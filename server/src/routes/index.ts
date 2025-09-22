@@ -3,6 +3,7 @@ import artistRoutes from "./artist.routes.js";
 import contactRoutes from "./contact.routes.js";
 import authRoutes from "./auth.routes.js";
 import userRoutes from "./user.routes.js";
+import favoriteRoutes from "./favorites.routes.js";
 
 const router = Router();
 
@@ -10,5 +11,6 @@ router.use("/artists", artistRoutes);
 router.use("/contact", contactRoutes);
 router.use("/", authRoutes);
 router.use("/users", userRoutes);
+router.use("/favorites", favoriteRoutes);
 
 export default router;

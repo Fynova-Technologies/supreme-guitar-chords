@@ -20,6 +20,7 @@ export async function upsertUser(req, res) {
 export async function checkEmailVerified(req, res) {
     try {
         const userId = req.query.user_id || "";
+        console.log("checkEmailVerified userId:", userId);
         if (!userId) {
             res.status(400).json({ error: "Missing user_id query parameter" });
             return;

@@ -3,13 +3,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import ArtistPage from "./pages/artist/[artist]/index";
-import SongPage from "./pages/artist/[artist]/song/[song]";
+import ArtistPage from "./pages/artist/index";
+import SongPage from "./pages/artist/[song]";
 import FavoritesPage from "./pages/favorites";
-import io from "socket.io-client";
 import { useEffect } from "react";
 import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
 import { TermsOfServicePage } from "@/pages/TermsOfServicePage";
@@ -59,17 +58,6 @@ function App() {
     );
   }
 
-  // If user needs to verify email, show only the verification modal
-  // if (showVerificationModal) {
-  //   return (
-  //     <QueryClientProvider client={queryClient}>
-  //       <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center">
-  //         <UnverifiedMail />
-  //       </div>
-  //     </QueryClientProvider>
-  //   );
-  // }
-
   // Normal app flow
   return (
     <QueryClientProvider client={queryClient}>
@@ -91,11 +79,6 @@ function App() {
             {/* Catch-all route for 404 Not Found */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          {/* {showVerificationModal && (
-            <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center">
-              <UnverifiedMail onClose={() => setShowVerificationModal(false)}/>
-            </div>
-          )} */}
           <AuthPopupManager />
         {/* </BrowserRouter> */}
       </TooltipProvider>

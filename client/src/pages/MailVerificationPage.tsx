@@ -20,6 +20,7 @@ export function MailVerificationPage({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const VITE_API_URL = import.meta.env.VITE_API_URL;
 
     console.log("VerifyPage user:", user);
   console.log("VerifyPage status:", status);
@@ -68,7 +69,7 @@ export function MailVerificationPage({
       attemptsRef.current++;
       try {
         const resp = await fetch(
-          `http://localhost:8000/api/check-email-verified-public?user_id=${encodeURIComponent(
+          `${VITE_API_URL}/api/check-email-verified-public?user_id=${encodeURIComponent(
             userId
           )}`
         );

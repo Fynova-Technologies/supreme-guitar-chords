@@ -7,6 +7,19 @@ const client = new MongoClient(uri, {
     strict: true,
     deprecationErrors: true,
   },
+    maxPoolSize: 10,
+  minPoolSize: 2,
+  maxIdleTimeMS: 30000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  
+  // Performance settings
+  retryWrites: true,
+  writeConcern: { w: 'majority' },
+  readPreference: 'primaryPreferred',
+  
+  // Connection compression
+  compressors: ['zlib']
 });
 
 export const connectToDatabase = async () => {

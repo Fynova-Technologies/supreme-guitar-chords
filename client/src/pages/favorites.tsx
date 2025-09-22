@@ -8,11 +8,12 @@ import { useChordVerseStore } from "@/lib/store";
 function FavoritesPage() {
   const { favorites } = useChordVerseStore();
   const [favoriteSongs, setFavoriteSongs] = useState<{song: any, artistName: string}[]>([]);
+  const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 useEffect(() => {
   async function fetchFavorites() {
     try {
-      const res = await fetch("http://localhost:8080/api/artists");
+      const res = await fetch(`${VITE_API_URL}/api/artists`);
       const payload = await res.json();
       
       // payload might be either Artist[] or { artists: Artist[] }
@@ -45,8 +46,6 @@ useEffect(() => {
   fetchFavorites();
 }, [favorites]);
 
-
-  
   return (
     <Layout>
       <div className="space-y-6">

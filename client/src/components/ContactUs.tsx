@@ -19,6 +19,8 @@ export const ContactUs: React.FC<ContactUsProps> = ({ onRequireLogic }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
+  const VITE_API_URL = import.meta.env.VITE_API_URL;
+  console.log("API URL contact us:", VITE_API_URL);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,7 +40,7 @@ export const ContactUs: React.FC<ContactUsProps> = ({ onRequireLogic }) => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:8000/api/contact", {
+      const res = await fetch(`${VITE_API_URL}/api/contact`, {
         method: "POST",
         headers: { "content-Type": "application/json" },
         body: JSON.stringify(formData),

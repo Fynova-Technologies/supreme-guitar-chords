@@ -14,5 +14,6 @@ export type ArtistDoc = {
   _id?: ObjectId | string;
   name: string;
   songs?: SongSubdoc[];
-  // any other fields...
+  artist: string; // for aggregation compatibility
+  title?: string; // for aggregation compatibility
 };

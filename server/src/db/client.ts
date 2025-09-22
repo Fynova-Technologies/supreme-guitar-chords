@@ -1,4 +1,3 @@
-
 import { MongoClient, Db } from "mongodb";
 import config from "../config/config.js";
 
@@ -7,6 +6,9 @@ const dbCache: Record<string, Db> = {};
 
 export async function connectMongo(): Promise<MongoClient> {
   if (client) return client;
+  if (!config.mongoUri) {
+    throw new Error("MONGO_URI is not set in environment variables");
+  }
   client = new MongoClient(config.mongoUri, {});
 
   await client.connect();
@@ -15,7 +17,8 @@ export async function connectMongo(): Promise<MongoClient> {
 }
 
 export function getDb(name: string = config.mongoDatabase): Db {
-  if (!client) throw new Error("MongoClient not connected — call connectMongo() first");
+  if (!client)
+    throw new Error("MongoClient not connected — call connectMongo() first");
   if (!dbCache[name]) {
     dbCache[name] = client.db(name);
     console.log("Database ready:", name);

@@ -14,6 +14,7 @@ export default function UnverifiedMail() {
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState<number>(0);
   const [checking, setChecking] = useState(false);
+  const VITE_API_URL = import.meta.env.VITE_API_URL;
 
   // Cooldown timer
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function UnverifiedMail() {
     const interval = setInterval(async () => {
       try {
         const resp = await fetch(
-          `http://localhost:8000/api/check-email-verified-public?user_id=${encodeURIComponent(
+          `${VITE_API_URL}/api/check-email-verified-public?user_id=${encodeURIComponent(
             user?.sub ?? ""
           )}`
         );
@@ -58,7 +59,7 @@ export default function UnverifiedMail() {
 
     try {
       const token = await getAccessTokenSilently();
-      const res = await fetch("http://localhost:8000/api/resend-verification", {
+      const res = await fetch(`${VITE_API_URL}/api/resend-verification`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +92,7 @@ export default function UnverifiedMail() {
     setError(null);
     try {
       const resp = await fetch(
-        `http://localhost:8000/api/check-email-verified-public?user_id=${encodeURIComponent(
+        `${VITE_API_URL}/api/check-email-verified-public?user_id=${encodeURIComponent(
           user?.sub ?? ""
         )}`
     );

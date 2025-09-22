@@ -1,13 +1,44 @@
+// import { RequestHandler } from "express";
+// import * as artistService from "../services/artist.service.js";
 import * as artistService from "../services/artist.service.js";
-// GET /api/artists
+// GET /api/artists (with pagination and search)
 export const getArtists = async (req, res) => {
     try {
-        const artists = await artistService.getAllArtists();
-        res.json(artists); // don't `return` here — RequestHandler should return void
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const search = req.query.search;
+        // Add response caching headers
+        res.set('Cache-Control', 'public, max-age=300'); // 5 minutes cache
+        const { artists, total } = await artistService.getPaginatedArtists(page, limit, search);
+        // Add performance timing header
+        res.set('X-Response-Time', `${Date.now()}`);
+        res.json({ artists, total });
     }
     catch (err) {
-        console.error("getArtists error", err);
+        console.error("getPaginatedArtists error:", err);
         res.status(500).json({ error: "Failed to fetch artists" });
+    }
+};
+export const getSingleArtist = async (req, res) => {
+    try {
+        const artistName = req.query.name;
+        if (!artistName) {
+            res.status(400).json({ error: "Artist name is required" });
+            return;
+        }
+        console.log('Controller: Looking for single artist:', artistName);
+        const artist = await artistService.getSingleArtist(artistName);
+        if (!artist) {
+            console.log('Controller: Artist not found');
+            res.status(404).json({ error: "Artist not found" });
+            return;
+        }
+        console.log('Controller: Returning artist with', artist.songs?.length || 0, 'songs');
+        res.json(artist);
+    }
+    catch (err) {
+        console.error("getSingleArtist error:", err);
+        res.status(500).json({ error: "Failed to fetch artist" });
     }
 };
 // POST /api/artists
@@ -24,5 +55,59 @@ export const createArtist = async (req, res) => {
     catch (err) {
         console.error("createArtist error", err);
         res.status(500).json({ error: "Failed to create artist" });
+    }
+};
+// Health check endpoint to monitor performance
+export const healthCheck = async (req, res) => {
+    try {
+        const startTime = Date.now();
+        // Simple DB ping
+        await artistService.getPaginatedArtists(1, 1);
+        const dbResponseTime = Date.now() - startTime;
+        res.json({
+            status: 'healthy',
+            database: {
+                connected: true,
+                responseTime: `${dbResponseTime}ms`
+            },
+            timestamp: new Date().toISOString()
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            status: 'unhealthy',
+            error: 'Database connection failed',
+            timestamp: new Date().toISOString()
+        });
+    }
+};
+export const getSongByArtistAndTitle = async (req, res) => {
+    try {
+        console.log('=== Song Request Debug ===');
+        console.log('Method:', req.method);
+        console.log('URL:', req.url);
+        console.log('Query params:', req.query);
+        console.log('========================');
+        // Change this line - use 'artist' and 'title' (not 'artistName')
+        const { artist, title } = req.query;
+        if (!artist || !title) {
+            console.log('Missing parameters - artist:', artist, 'title:', title);
+            res.status(400).json({ error: "artist name and song title required" });
+            return;
+        }
+        console.log('Searching for:', { artist, title });
+        // Pass the correct parameters
+        const result = await artistService.getSongByArtistAndTitle(artist, title);
+        if (!result) {
+            console.log('Song not found in database');
+            res.status(404).json({ error: "Song not found" });
+            return;
+        }
+        console.log('Song found, returning:', result.title);
+        res.json(result);
+    }
+    catch (err) {
+        console.error("getSongByArtistAndSongId error", err);
+        res.status(500).json({ error: "Failed to fetch song" });
     }
 };

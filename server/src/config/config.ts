@@ -3,7 +3,7 @@ dotenv.config();
 
 export default {
   port: Number(process.env.PORT || 8000),
-  mongoUri: process.env.MONGO_URI || "mongodb://localhost:27017",
+  mongoUri: process.env.MONGO_URI,
   mongoDatabase: process.env.MONGO_DATABASE || "development",
   auth0: {
     domain: process.env.AUTH0_DOMAIN || "",

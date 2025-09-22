@@ -27,6 +27,7 @@ export async function checkEmailVerified(
 ): Promise<void> {
   try {
     const userId = (req.query.user_id as string) || "";
+    console.log("checkEmailVerified userId:", userId);
     if (!userId) {
       res.status(400).json({ error: "Missing user_id query parameter" });
       return;

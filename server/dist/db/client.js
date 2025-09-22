@@ -5,6 +5,9 @@ const dbCache = {};
 export async function connectMongo() {
     if (client)
         return client;
+    if (!config.mongoUri) {
+        throw new Error("MONGO_URI is not set in environment variables");
+    }
     client = new MongoClient(config.mongoUri, {});
     await client.connect();
     console.log("Connected to MongoDB cluster");

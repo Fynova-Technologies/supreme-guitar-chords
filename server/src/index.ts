@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express, { RequestHandler } from "express";
 import http from "http";
 import cors from "cors";
@@ -10,6 +7,7 @@ import { connectMongo, closeMongo } from "./db/client.js";
 import { initCollections } from "./db/collections.js";
 import routes from "./routes/index.js";
 import { setupSockets } from "./socket.js";
+import compression from "compression";
 
 async function startServer() {
   const app = express();
@@ -18,6 +16,7 @@ async function startServer() {
 
   // routes
   app.use("/api", routes);
+  app.use(compression());
 
   // typed health handler — RequestHandler comes from express types
   const healthHandler: RequestHandler = (_req, res) => {
